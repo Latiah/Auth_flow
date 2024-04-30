@@ -1,3 +1,4 @@
+[![Build Android App](https://github.com/Latiah/Auth_flow/actions/workflows/build.yml/badge.svg)](https://github.com/Latiah/Auth_flow/actions/workflows/build.yml)
 # Hoop - Parking Booking
 
 Hoop is a mobile app that allows users to find the best parking space nearby for their vehicles using their mobile phones wherever and whenever they want.
