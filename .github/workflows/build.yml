@@ -1,36 +1,33 @@
-name: Build and deploy for dev
+name: Build and Deploy for Dev
+
 on:
-  push:
+ push:
     branches: [ "master" ]
+
 jobs:
-  ios-build:
+ ios-build:
     name: iOS Dev Build
-    runs-on: self-hosted
+    runs-on: macos-latest
     steps:
-      - name: Show self-hosted machine infomation
-        run: uname -a
-      - name: Cancel previous runs
-        uses: styfle/cancel-workflow-action@0.9.1
       - name: Checkout repo from dev branch
         uses: actions/checkout@v3
         with:
           ref: master
-      - name: Install npm dependency
+      - name: Install npm dependencies
         run: npm install
-      - name: Cache cocoapods
+      - name: Cache Cocoapods
         uses: actions/cache@v3
         with:
           path: /ios/Pods
           key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-pods-
-      - name: Install pod dependency
+      - name: Install Cocoapods dependencies
         run: |
           cd ios
           bundle exec pod install
       - name: Build iOS JS Bundle
-        run: |
-          yarn run package-ios
+        run: npm run package-ios
       - name: Install bundler
         run: |
           cd ios
@@ -39,23 +36,20 @@ jobs:
         run: |
           cd ios
           bundle install
-      - name: Run fastlane
+      - name: Run Fastlane
         run: |
           cd ios
           bundle exec fastlane build_testflight
-  android-build:
+
+ android-build:
     name: Android Dev Build
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
-      - name: Show self-hosted machine infomation
-        run: uname -a
-      - name: Cancel previous runs
-        uses: styfle/cancel-workflow-action@0.9.1
-      - name: Checkout repo from master branch
+      - name: Checkout repo from dev branch
         uses: actions/checkout@v3
         with:
           ref: master
-      - name: Install npm dependency
+      - name: Install npm dependencies
         run: npm install
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
@@ -67,17 +61,12 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
       - name: Execute Gradle build
         run: |
           cd android
           ./gradlew build
       - name: Build Android JS Bundle
-        run: |
-          npm run package-android
-      - name: Delete Android build duplicate assets resource
-        run: npm run delete-pics
+        run: npm run package-android
       - name: Install bundler
         run: |
           cd android
@@ -86,7 +75,7 @@ jobs:
         run: |
           cd android
           bundle install
-      - name: Run fastlane
+      - name: Run Fastlane
         run: |
           cd android
           bundle exec fastlane build_qa
