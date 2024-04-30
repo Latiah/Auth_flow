@@ -1,46 +1,92 @@
-
-name: "Build Android app"
-
+name: Build and deploy for dev
 on:
-  workflow_dispatch:
-    branches: [dev]
-    # can add push and pull_request here 
-
+  push:
+    branches: [ "master" ]
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  ios-build:
+    name: iOS Dev Build
+    runs-on: self-hosted
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Install Java
-        uses: actions/setup-java@v2
+      - name: Show self-hosted machine infomation
+        run: uname -a
+      - name: Cancel previous runs
+        uses: styfle/cancel-workflow-action@0.9.1
+      - name: Checkout repo from dev branch
+        uses: actions/checkout@v3
         with:
-          java-version: "11"
-          distribution: "adopt"
-          cache: "gradle"
-
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@v1
-
-      - name: Setup Node  
-        uses: actions/setup-node@v3
+          ref: master
+      - name: Install npm dependency
+        run: yarn install
+      - name: Cache cocoapods
+        uses: actions/cache@v3
         with:
-          node-version: '16'
-
-      - name: Run Yarn Install
+          path: /ios/Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+      - name: Install pod dependency
         run: |
-             cd ./packages/app-mobile/
-             npm i -g corepack
-             yarn install             
-      - name: Build application
+          cd ios
+          bundle exec pod install
+      - name: Build iOS JS Bundle
         run: |
-             cd ./packages/app-mobile/android
-             ./gradlew assembleDebug             
-      - name: Upload application
-        uses: actions/upload-artifact@v2
+          yarn run package-ios
+      - name: Install bundler
+        run: |
+          cd ios
+          gem install bundler
+      - name: Install gem plugins
+        run: |
+          cd ios
+          bundle install
+      - name: Run fastlane
+        run: |
+          cd ios
+          bundle exec fastlane build_testflight
+  android-build:
+    name: Android Dev Build
+    runs-on: self-hosted
+    steps:
+      - name: Show self-hosted machine infomation
+        run: uname -a
+      - name: Cancel previous runs
+        uses: styfle/cancel-workflow-action@0.9.1
+      - name: Checkout repo from master branch
+        uses: actions/checkout@v3
         with:
-          name: app
-          path: ./packages/app-mobile/android/app/build/outputs/apk/debug/app-debug.apk
-          retention-days: 3
-
+          ref: master
+      - name: Install npm dependency
+        run: yarn install
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+      - name: Execute Gradle build
+        run: |
+          cd android
+          ./gradlew build
+      - name: Build Android JS Bundle
+        run: |
+          yarn run package-android
+      - name: Delete Android build duplicate assets resource
+        run: yarn run delete-pics
+      - name: Install bundler
+        run: |
+          cd android
+          gem install bundler
+      - name: Install gem plugins
+        run: |
+          cd android
+          bundle install
+      - name: Run fastlane
+        run: |
+          cd android
+          bundle exec fastlane build_qa
