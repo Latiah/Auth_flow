@@ -32,7 +32,7 @@ jobs:
       run: npm install
 
     - name: Build Android app
-      run: cd app && ./gradlew assembleDebug
+      run: cd app
 
     - name: Upload APK
       uses: actions/upload-artifact@v2
