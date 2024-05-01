@@ -35,7 +35,7 @@ jobs:
   - name: Install dependencies
     run: npm install
   - name: Initialize EAS Build
-    run: eas init
+    run: npx eas-cli init --non-interactive
 
   - name: Deploy to Expo
     env:
