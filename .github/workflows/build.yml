@@ -1,50 +1,20 @@
+deploy:
+  needs: build-and-test
+  runs-on: ubuntu-latest
 
-name: Mobile App CI/CD
+  steps:
+  - uses: actions/checkout@v3
 
-on:
-  push:
-  workflow_dispatch:
+  - name: Set up Node.js
+    uses: actions/setup-node@v2
+    with:
+      node-version: '20'
 
-jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
+  - name: Install dependencies
+    run: npm install
 
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '20'
-
-    - name: Install dependencies
-      run: npm install
-
-    
-
-    - name: Build the android app
-      run: npm run build
-      env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-   
-   
-  
-  deploy:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '20'
-
-    - name: Install dependencies
-      run: npm install
-
-    - name: Deploy to Expo
-      run: expo publish
-      env:
-        EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+  - name: Deploy to Expo
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+    run: |
+      echo 'y' | npx eas-cli build --platform android
