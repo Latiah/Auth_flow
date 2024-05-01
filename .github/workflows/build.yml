@@ -24,7 +24,8 @@ jobs:
 
     - name: Build the android app
       run: npm run build
-      
+      env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
    
    
   
