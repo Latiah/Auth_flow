@@ -36,7 +36,9 @@ jobs:
     run: npm install
   - name: Initialize EAS Build
     run: npx eas-cli init --non-interactive --id cfb323a5-4647-4261-ab0a-2b176d243608
- 
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      
   - name: Deploy to Expo
     env:
       EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
