@@ -22,11 +22,13 @@ jobs:
 
     
 
-    - name: Build the app
-      run: npm run build
-
+    - name: Build the android app
+      run: npm run build:android
+      
+    - name: Build the ios app
+      run: npm run build:ios
    
-
+  
   deploy:
     needs: build-and-test
     runs-on: ubuntu-latest
