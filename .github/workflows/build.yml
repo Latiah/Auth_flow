@@ -40,4 +40,4 @@ jobs:
       EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
     run: |
       echo 'y' | npx eas-cli build --platform all
-      
+      echo 'y'
