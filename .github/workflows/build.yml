@@ -3,7 +3,7 @@ name: CI Workflow
 
 on:
   push:
-    branches: [ main ] # Specify the branch(es) you want to trigger the workflow
+   
   workflow_dispatch: # Allows manual triggering of the workflow
 
 jobs:
