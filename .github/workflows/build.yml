@@ -39,5 +39,5 @@ jobs:
     env:
       EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
     run: |
-      echo 'y' | npx eas-cli build --platform all --non-interactive
+     npx eas-cli build --platform android --non-interactive
       echo 'y'
