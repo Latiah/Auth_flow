@@ -36,8 +36,7 @@ jobs:
           run: npm install
         
         - name: Deploy to Expo
-          run: |
-            npm run build |echo  "yes"
+          run: npm run build 
           
   
  
