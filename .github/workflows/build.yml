@@ -40,12 +40,12 @@ jobs:
     run: |
       npx eas-cli init  |echo  "yes"
     env:
-      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      EXPO_TOKEN: ${{ secrets.token }}
       
       
   - name: Deploy to Expo
     env:
-      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      EXPO_TOKEN: ${{ secrets.token }}
     run: |
       npx eas-cli build --platform android  |echo  "yes"
     
