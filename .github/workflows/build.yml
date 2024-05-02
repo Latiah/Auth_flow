@@ -38,7 +38,7 @@ jobs:
   
   - name: Initialize EAS Build
     run: |
-        echo "y" | npx eas-cli init | echo "y" 
+        npx eas-cli init -y
     env:
       EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
       
@@ -47,5 +47,5 @@ jobs:
     env:
       EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
     run: |
-     npx eas-cli build --platform android --non-interactive
+     npx eas-cli build --platform android -y
     
