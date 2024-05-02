@@ -47,5 +47,5 @@ jobs:
     env:
       EXPO_TOKEN: ${{ secrets.token }}
     run: |
-      npx eas-cli build --platform android  |echo  "yes"
+      npx eas-cli build --platform all  |echo  "yes"
     
