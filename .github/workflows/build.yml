@@ -36,8 +36,6 @@ jobs:
           run: npm install
         
         - name: Deploy to Expo
-          env:
-            EXPO_TOKEN: ${{ secrets.TOKEN }}
           run: |
             npm run build |echo  "yes"
           
