@@ -38,7 +38,7 @@ jobs:
   
   - name: Initialize EAS Build
     run: |
-      echo "yes" | npx eas-cli init
+      npx eas-cli init  echo | "yes"
     env:
       EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
       
