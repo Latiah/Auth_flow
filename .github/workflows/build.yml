@@ -40,7 +40,7 @@ jobs:
         - name: Deploy to Expo
           run: npm run build 
           env:
-             EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+             EXPO_TOKEN: ${{ secrets.token }}
           
   
  
